@@ -1,0 +1,212 @@
+// Flex grid, as a mimic of angular material
+// For the how-to-use, please refer to the fabulous angular doc
+//   at https://material.angularjs.org/latest/layout/introduction
+//   and make it class instead of attribute value (recommended, personally)
+//
+// For eg:
+//   `layout="row"` should become .layout-row
+//   `flex="33"` should become .flex-33
+//   but absolutely not required :-)
+//
+// There are a few known issues with flex box at the time of writing this
+// * May not work properly with button, fieldset, and table
+//   https://bugzilla.mozilla.org/show_bug.cgi?id=984869
+//
+$layoutMargin: 0.5rem;
+$layoutPadding: 0.5rem;
+$flexSpacingConfig: (
+  "inc": 5,
+  "extra": (
+    "33": 33.33%,
+    "66": 66.66%
+  )
+);
+$flexOrderConfig: (
+  "min": -20,
+  "max": 20,
+  "inc": 1
+);
+$flexAlignmentConfig: (
+  "horizontal": (
+    "start": flex-start,
+    "center": center,
+    "end": flex-end,
+    "space-around": space-around,
+    "space-between": space-between
+  ),
+  "vertical": (
+    "start": flex-start,
+    "center": center,
+    "end": flex-end,
+    "stretch": stretch
+  )
+);
+// Additional values config
+// @see https://github.com/angular/material/blob/v1.0.1/docs/app/partials/layout-children.tmpl.html#L92
+$flexAdditionalValues: (
+  "auto": 0 1 auto,
+  "grow": 1 1 100%,
+  "initial": 1 1 auto,
+  "nogrow": 0 1 auto,
+  "none": 0 0 auto,
+  "noshrink": 1 0 auto
+);
+
+
+@mixin flexSizing($percentage) {
+  & { flex-basis: $percentage; }
+  .layout-row &, [layout="row"] & { max-width: $percentage; }
+  .layout-column &, [layout="column"] & { max-height: $percentage; }
+}
+@mixin layoutHorizontalAlign($alignment) {
+  justify-content: $alignment;
+}
+@mixin layoutVerticalAlign($alignment) {
+  align-items: $alignment; align-content: $alignment;
+}
+
+
+%layout {
+  display: flex; box-sizing: border-box;
+}
+.layout, [layout] {
+  @extend %layout;
+}
+.layout-row, [layout="row"] {
+  @extend %layout;
+  flex-direction: row;
+}
+.layout-column, [layout="column"] {
+  @extend %layout;
+  flex-direction: column;
+
+  // flex element should be fluid (you know, fit in parent) by default,
+  //   pretty handy and similar to `display: flex` in `.layout-row`,
+  //   but a element-container (.layout-column.flex) shouldn't be fluid
+  & {
+    min-height: 100%;
+
+    &[class~="flex"], &[class^="flex-"], &[class*=" flex-"], &[flex] {
+      min-height: none;
+    }
+  }
+}
+.layout-wrap, [layout="wrap"] {
+  flex-wrap: wrap;
+}
+.layout-nowrap, [layout="nowrap"] {
+  flex-wrap: nowrap;
+}
+.layout-margin, [layout-margin] {
+  margin: $layoutMargin;
+}
+.layout-padding, [layout-padding] {
+  padding: $layoutPadding;
+}
+.layout-fill, [layout-fill] {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+}
+
+// Layout align content
+@each $horizontalK, $horizontalV in map-get($flexAlignmentConfig, horizontal) {
+  @each $verticalK, $verticalV in map-get($flexAlignmentConfig, vertical) {
+    .layout-align-#{$horizontalK},
+    [layout-align="#{$horizontalK}"],
+    .layout-align-#{$horizontalK}-#{$verticalK},
+    [layout-align="#{$horizontalK} #{$verticalK}"] {
+      @include layoutHorizontalAlign($horizontalV);
+    }
+
+    .layout-align--#{$verticalK},
+    [layout-align=" #{$verticalK}"],
+    .layout-align-#{$horizontalK}-#{$verticalK},
+    [layout-align="#{$horizontalK} #{$verticalK}"] {
+      @include layoutVerticalAlign($verticalV);
+    }
+  }
+}
+
+
+%flex {
+  flex: 1 1 0%; box-sizing: border-box;
+}
+.flex, [flex] {
+  @extend %flex;
+}
+
+// Incremental steps for
+//   flex sizing and offset spacing
+$flexSpacing: 0;
+@while $flexSpacing <= 100 {
+  .flex-#{$flexSpacing}, [flex="#{$flexSpacing}"] {
+    @extend %flex;
+    @include flexSizing($flexSpacing * 1%);
+  }
+
+  .flex-offset-#{$flexSpacing}, [flex-offset="#{$flexSpacing}"] {
+    margin-left: $flexSpacing * 1%;
+  }
+
+  $flexSpacing: $flexSpacing + map-get($flexSpacingConfig, inc);
+}
+
+// Extra flex steps (eg: 33%, 66% ..)
+//   for flex sizing and offset spacing
+//   not in the inc loop
+@each $k, $v in map-get($flexSpacingConfig, extra) {
+  .flex-#{$k}, [flex="#{$k}"] {
+    @extend %flex;
+    @include flexSizing($v);
+  }
+
+  .flex-offset-#{$k}, [flex-offset="#{$k}"] {
+    margin-left: $v;
+  }
+}
+
+
+// Flex order should be in between
+//   $flexOrderConfig['max'] and $flexOrderConfig['min']
+$flexOrder: map-get($flexOrderConfig, min);
+@while $flexOrder <= map-get($flexOrderConfig, max) {
+  .flex-order-#{$flexOrder}, [flex-order="#{$flexOrder}"] {
+    order: $flexOrder;
+  }
+
+  $flexOrder: $flexOrder + map-get($flexOrderConfig, inc);
+}
+
+// Additional flex values
+@each $k, $v in $flexAdditionalValues {
+  .flex-#{$k}, [flex="#{$k}"] {
+    @extend %flex;
+    flex: $v;
+  }
+}
+
+
+// reset `max-` sizing for flex element
+//   inside a nested complex layout
+//   (eg: layout-column in layout-row, or vice versa)
+.layout-row, [layout="row"] {
+  .layout-column, [layout="column"] {
+    [class~="flex"], [class^="flex-"], [class*=" flex-"], [flex] {
+      max-width: 100%;
+    }
+  }
+}
+.layout-column, [layout="column"] {
+  .layout-row, [layout="row"] {
+    [class~="flex"], [class^="flex-"], [class*=" flex-"], [flex] {
+      max-height: 100%;
+    }
+  }
+}
+
+// TODO show
+// TODO hide
+
+// TODO responsive
