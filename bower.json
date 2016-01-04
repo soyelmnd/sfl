@@ -1,0 +1,16 @@
+{
+  "name": "sfl",
+  "version": "0.0.1",
+  "homepage": "https://github.com/soyelmnd/sfl",
+  "authors": [
+    "soyelmnd <minhnd.it@gmail.com>"
+  ],
+  "description": "A simple flex layout",
+  "keywords": [
+    "sfl",
+    "flex",
+    "layout",
+    "angular-material"
+  ],
+  "license": "MIT"
+}
