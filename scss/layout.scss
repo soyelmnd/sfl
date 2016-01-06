@@ -54,29 +54,45 @@ $flexAdditionalValues: (
 
 
 @mixin flexSizing($percentage) {
-  & { flex-basis: $percentage; }
-  .layout-row &, [layout="row"] & { max-width: $percentage; }
-  .layout-column &, [layout="column"] & { max-height: $percentage; }
+  & {
+    flex-basis: $percentage;
+  }
+
+  .layout-row &,
+  [layout="row"] & {
+    max-width: $percentage;
+  }
+
+  .layout-column &,
+  [layout="column"] & {
+    max-height: $percentage;
+  }
 }
 @mixin layoutHorizontalAlign($alignment) {
   justify-content: $alignment;
 }
 @mixin layoutVerticalAlign($alignment) {
-  align-items: $alignment; align-content: $alignment;
+  align-items: $alignment;
+  align-content: $alignment;
 }
 
 
 %layout {
-  display: flex; box-sizing: border-box; overflow: auto;
+  display: flex;
+  box-sizing: border-box;
+  overflow: auto;
 }
-.layout, [layout] {
+.layout,
+[layout] {
   @extend %layout;
 }
-.layout-row, [layout="row"] {
+.layout-row,
+[layout="row"] {
   @extend %layout;
   flex-direction: row;
 }
-.layout-column, [layout="column"] {
+.layout-column,
+[layout="column"] {
   @extend %layout;
   flex-direction: column;
 
@@ -86,24 +102,32 @@ $flexAdditionalValues: (
   & {
     height: 100%;
 
-    &[class~="flex"], &[class^="flex-"], &[class*=" flex-"], &[flex] {
+    &[class~="flex"],
+    &[class^="flex-"],
+    &[class*=" flex-"],
+    &[flex] {
       height: auto;
     }
   }
 }
-.layout-wrap, [layout="wrap"] {
+.layout-wrap,
+[layout="wrap"] {
   flex-wrap: wrap;
 }
-.layout-nowrap, [layout="nowrap"] {
+.layout-nowrap,
+[layout="nowrap"] {
   flex-wrap: nowrap;
 }
-.layout-margin, [layout-margin] {
+.layout-margin,
+[layout-margin] {
   margin: $layoutMargin;
 }
-.layout-padding, [layout-padding] {
+.layout-padding,
+[layout-padding] {
   padding: $layoutPadding;
 }
-.layout-fill, [layout-fill] {
+.layout-fill,
+[layout-fill] {
   margin: 0;
   width: 100%;
   height: 100%;
@@ -141,12 +165,14 @@ $flexAdditionalValues: (
 //   flex sizing and offset spacing
 $flexSpacing: 0;
 @while $flexSpacing <= 100 {
-  .flex-#{$flexSpacing}, [flex="#{$flexSpacing}"] {
+  .flex-#{$flexSpacing},
+  [flex="#{$flexSpacing}"] {
     @extend %flex;
     @include flexSizing($flexSpacing * 1%);
   }
 
-  .flex-offset-#{$flexSpacing}, [flex-offset="#{$flexSpacing}"] {
+  .flex-offset-#{$flexSpacing},
+  [flex-offset="#{$flexSpacing}"] {
     margin-left: $flexSpacing * 1%;
   }
 
@@ -157,12 +183,14 @@ $flexSpacing: 0;
 //   for flex sizing and offset spacing
 //   not in the inc loop
 @each $k, $v in map-get($flexSpacingConfig, extra) {
-  .flex-#{$k}, [flex="#{$k}"] {
+  .flex-#{$k},
+  [flex="#{$k}"] {
     @extend %flex;
     @include flexSizing($v);
   }
 
-  .flex-offset-#{$k}, [flex-offset="#{$k}"] {
+  .flex-offset-#{$k},
+  [flex-offset="#{$k}"] {
     margin-left: $v;
   }
 }
@@ -172,7 +200,8 @@ $flexSpacing: 0;
 //   $flexOrderConfig['max'] and $flexOrderConfig['min']
 $flexOrder: map-get($flexOrderConfig, min);
 @while $flexOrder <= map-get($flexOrderConfig, max) {
-  .flex-order-#{$flexOrder}, [flex-order="#{$flexOrder}"] {
+  .flex-order-#{$flexOrder},
+  [flex-order="#{$flexOrder}"] {
     order: $flexOrder;
   }
 
@@ -181,7 +210,8 @@ $flexOrder: map-get($flexOrderConfig, min);
 
 // Additional flex values
 @each $k, $v in $flexAdditionalValues {
-  .flex-#{$k}, [flex="#{$k}"] {
+  .flex-#{$k},
+  [flex="#{$k}"] {
     @extend %flex;
     flex: $v;
   }
@@ -191,16 +221,27 @@ $flexOrder: map-get($flexOrderConfig, min);
 // reset `max-` sizing for flex element
 //   inside a nested complex layout
 //   (eg: layout-column in layout-row, or vice versa)
-.layout-row, [layout="row"] {
-  .layout-column, [layout="column"] {
-    [class~="flex"], [class^="flex-"], [class*=" flex-"], [flex] {
+.layout-row,
+[layout="row"] {
+  .layout-column,
+  [layout="column"] {
+    [class~="flex"],
+    [class^="flex-"],
+    [class*=" flex-"],
+    [flex] {
       max-width: 100%;
     }
   }
 }
-.layout-column, [layout="column"] {
-  .layout-row, [layout="row"] {
-    [class~="flex"], [class^="flex-"], [class*=" flex-"], [flex] {
+
+.layout-column,
+[layout="column"] {
+  .layout-row,
+  [layout="row"] {
+    [class~="flex"],
+    [class^="flex-"],
+    [class*=" flex-"],
+    [flex] {
       max-height: 100%;
     }
   }
