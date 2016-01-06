@@ -67,7 +67,7 @@ $flexAdditionalValues: (
 
 
 %layout {
-  display: flex; box-sizing: border-box;
+  display: flex; box-sizing: border-box; overflow: auto;
 }
 .layout, [layout] {
   @extend %layout;
@@ -84,10 +84,10 @@ $flexAdditionalValues: (
   //   pretty handy and similar to `display: flex` in `.layout-row`,
   //   but a element-container (.layout-column.flex) shouldn't be fluid
   & {
-    min-height: 100%;
+    height: 100%;
 
     &[class~="flex"], &[class^="flex-"], &[class*=" flex-"], &[flex] {
-      min-height: none;
+      height: auto;
     }
   }
 }
