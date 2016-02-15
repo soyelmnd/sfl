@@ -5,6 +5,8 @@
   "authors": [
     "soyelmnd <minhnd.it@gmail.com>"
   ],
+  "main": "scss/index.scss",
+  "ignore": [],
   "description": "A simple flex layout",
   "keywords": [
     "sfl",
