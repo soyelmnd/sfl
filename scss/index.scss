@@ -44,18 +44,18 @@ $flexAlignmentConfig: (
 // Additional values config
 // @see https://github.com/angular/material/blob/v1.0.1/docs/app/partials/layout-children.tmpl.html#L92
 $flexAdditionalValues: (
-  "auto": 0 1 auto,
-  "grow": 1 1 100%,
-  "initial": 1 1 auto,
-  "nogrow": 0 1 auto,
+  "initial": 0 1 auto,
+  "auto": 1 1 auto,
   "none": 0 0 auto,
+  "grow": 1 1 100%,
+  "nogrow": 0 1 auto,
   "noshrink": 1 0 auto
 );
 
 
 @mixin flexSizing($percentage) {
   & {
-    flex-basis: $percentage;
+    flex: 1 1 $percentage;
   }
 
   &,
@@ -147,10 +147,21 @@ $flexAdditionalValues: (
 
 
 %flex {
-  flex: 1 1 0%; box-sizing: border-box;
+  box-sizing: border-box;
+  flex: 1;
 }
 .flex, [flex] {
   @extend %flex;
+
+  .layout-row > &,
+  [layout="row"] > & {
+    min-width: 0;
+  }
+
+  .layout-column > &,
+  [layout="column"] > & {
+    min-height: 0;
+  }
 }
 
 // Incremental steps for
