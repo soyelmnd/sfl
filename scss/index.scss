@@ -1,4 +1,4 @@
-// Flex grid, as a mimic of angular material
+// Flex grid, as a mimic of the mighty angular material.
 // For the how-to-use, please refer to the fabulous angular doc
 //   at https://material.angularjs.org/latest/layout/introduction
 //   and make it class instead of attribute value (recommended, personally)
@@ -58,13 +58,16 @@ $flexAdditionalValues: (
     flex-basis: $percentage;
   }
 
-  .layout-row &,
-  [layout="row"] & {
+  &,
+  .layout-row > &,
+  [layout="row"] > & {
     max-width: $percentage;
+    max-height: 100%;
   }
 
-  .layout-column &,
-  [layout="column"] & {
+  .layout-column > &,
+  [layout="column"] > & {
+    max-width: 100%;
     max-height: $percentage;
   }
 }
@@ -82,6 +85,7 @@ $flexAdditionalValues: (
   box-sizing: border-box;
   overflow: auto;
 }
+
 .layout,
 [layout] {
   @extend %layout;
@@ -95,21 +99,8 @@ $flexAdditionalValues: (
 [layout="column"] {
   @extend %layout;
   flex-direction: column;
-
-  // flex element should be fluid (you know, fit in parent) by default,
-  //   pretty handy and similar to `display: flex` in `.layout-row`,
-  //   but a element-container (.layout-column.flex) shouldn't be fluid
-  & {
-    height: 100%;
-
-    &[class~="flex"],
-    &[class^="flex-"],
-    &[class*=" flex-"],
-    &[flex] {
-      height: auto;
-    }
-  }
 }
+
 .layout-wrap,
 [layout="wrap"] {
   flex-wrap: wrap;
@@ -118,6 +109,7 @@ $flexAdditionalValues: (
 [layout="nowrap"] {
   flex-wrap: nowrap;
 }
+
 .layout-margin,
 [layout-margin] {
   margin: $layoutMargin;
@@ -214,36 +206,6 @@ $flexOrder: map-get($flexOrderConfig, min);
   [flex="#{$k}"] {
     @extend %flex;
     flex: $v;
-  }
-}
-
-
-// reset `max-` sizing for flex element
-//   inside a nested complex layout
-//   (eg: layout-column in layout-row, or vice versa)
-.layout-row,
-[layout="row"] {
-  .layout-column,
-  [layout="column"] {
-    [class~="flex"],
-    [class^="flex-"],
-    [class*=" flex-"],
-    [flex] {
-      max-width: 100%;
-    }
-  }
-}
-
-.layout-column,
-[layout="column"] {
-  .layout-row,
-  [layout="row"] {
-    [class~="flex"],
-    [class^="flex-"],
-    [class*=" flex-"],
-    [flex] {
-      max-height: 100%;
-    }
   }
 }
 
