@@ -1,0 +1,22 @@
+{
+  "name": "sfl",
+  "version": "0.0.3",
+  "description": "A simple flex layout",
+  "main": "scss/index.scss",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soyelmnd/sfl.git"
+  },
+  "keywords": [
+    "sfl",
+    "flex",
+    "layout",
+    "angular-material"
+  ],
+  "author": "soyelmnd <minhnd.it@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/soyelmnd/sfl/issues"
+  },
+  "homepage": "https://github.com/soyelmnd/sfl#readme"
+}
